@@ -1,0 +1,141 @@
+doctype html
+html
+    script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js')
+    head
+        title Qualifier
+        meta(charset='UTF-8')
+        script(src="/socket.io/socket.io.js")
+        link(rel='stylesheet', href='stylesheets/jquery.rateyo.min.css')
+        link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+        link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css')
+        link(rel='stylesheet', href='/stylesheets/TweetList.css')
+        script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular.min.js')
+        script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular-resource.min.js')
+        script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular-sanitize.min.js')
+        script(src='//cdnjs.cloudflare.com/ajax/libs/masonry/3.1.5/masonry.pkgd.min.js')
+        script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js')
+        script(src='//platform.twitter.com/widgets.js')
+        script(src='/javascripts/TweetList.js')
+
+
+    body(ng-app='Twitter')
+        script.
+            var htprofesor = 'ReneOrnelyz';
+            var htcurso = 'EDD';
+            var mirating = 0;
+            var socket = io.connect();
+            var peticion = {profesor:'ReneOrnelyz', curso:'EDD'};
+            var mi_voto = {
+                profesor: htprofesor,
+                curso: htcurso,
+                puntualidad: '0',
+                c_horario: '0',
+                asistencia: '0',
+                t_estudiantes: '0',
+                metodologia: '0',
+                objetividad: '0',
+                revision: '0',
+                transparencia: '0',
+                comunicacion: '0'
+            };
+            var puntuacion = 0;
+            socket.emit('req_info', JSON.stringify(peticion));
+            socket.on('Qresult', function (data) {
+                console.log('el resultado es: ' + data);
+                mirating = data;
+                $("#rateYo1").rateYo("option", "rating", mirating);
+            });
+            socket.on('Qvote', function (data) {
+                console.log('Has votado tio!');
+                //emitimos la peticion de calificacion general, para poder actualizar los resultados.
+                socket.emit('req_info', JSON.stringify(peticion));
+            });
+            function vote(){
+                socket.emit('vote', JSON.stringify(mi_voto));
+            }
+            function get_votes() {
+                mi_voto.puntualidad = $("#rate_puntualidad").rateYo("option", "rating");
+                mi_voto.c_horario = $("#rate_hestablecido").rateYo("option", "rating");
+                mi_voto.asistencia = $("#rate_asistencia").rateYo("option", "rating");
+                mi_voto.t_estudiantes = $("#rate_trato").rateYo("option", "rating");
+                mi_voto.metodologia = $("#rate_metodologia").rateYo("option", "rating");
+                mi_voto.objetividad = $("#rate_objetividad").rateYo("option", "rating");
+                mi_voto.revision = $("#rate_revision").rateYo("option", "rating");
+                mi_voto.transparencia = $("#rate_transparencia").rateYo("option", "rating");
+                mi_voto.comunicacion = $("#rate_comunicacion").rateYo("option", "rating");
+                vote();
+            }
+
+
+
+
+h2 Rating General
+    h3 #profesor #curso
+    div(id='rateYo1')
+    div( ng-controller='myCtrl')
+        br
+        br
+        button(ng-click='myFunc()') Mostrar/Esconder
+        br
+        div(id='rating', ng-show='showMe' )
+            h4 Votar!
+            p Puntualidad:
+            div(id='rate_puntualidad')
+            p Cumplimiento de horario establecido:
+            div(id='rate_hestablecido')
+            p Asistencia
+            div(id='rate_asistencia')
+            p Trato hacia los estudiantes
+            div(id='rate_trato')
+            p Metodologia
+            div(id='rate_metodologia')
+            p Objetividad
+            div(id='rate_objetividad')
+            p Revision de Examenes
+            div(id='rate_revision')
+            p Transparencia en cuadro de notas
+            div(id='rate_transparencia')
+            p Comunicacion
+            div(id='rate_comunicacion')
+            br
+            button(onclick='get_votes()', ng-click='myFunc()') Votar
+
+    script(type='text/javascript',src='javascripts/jquery.js')
+    script(type='text/javascript',src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.0.1/jquery.rateyo.min.js')
+    script(type='text/javascript', src='javascripts/rate.js')
+
+    div(ng-controller='TweetList')
+        .row
+            .col-lg-12
+                h1
+                    img#twitter-logo(src='images/Twitter_logo_white.png')
+        #search-container.row
+            .col-lg-3
+                // this form will trigger the getTweets function in the javascript controller on submit
+                form.input-group(ng-submit='getTweets()')
+                    span.input-group-addon #
+                    // this text input is binded to a variable in the javascript controller
+                    input.form-control(type='text', placeholder='Hashtag', ng-model='username')
+                    span.input-group-btn
+                        button.btn.btn-default(type='submit') Get Tweets
+        .row.clearfix
+            .col-lg-12
+                #tweet-list
+                    // this div will repeat for every tweet object in the array using a template-expanding directive
+                    .tweet-item(ng-repeat='tweet in tweetsResult')
+                        // sanitized HTML binding
+                        div(ng-bind-html='tweet.oEmbed.html')
+                        // binding to Tweet source property
+                        .tweet-details
+                            | Tweeted from
+                            span(ng-bind-html='tweet.source')
+                            // play around with rendering different Tweet properties
+                            // <p>{{tweet.user.screen_name}}</p>
+                            // <p>{{tweet.text}}</p>
+        .row
+            .col-lg-12
+                // this button will trigger the getMoreTweets function in the javascript controller
+                button.load-more-btn.btn.btn-default(type='button', ng-click='getMoreTweets()') Get More Tweets
+
+
+

@@ -21,6 +21,7 @@ $(function () {
         starWidth: "64px",
         spacing: "5px",
         multiColor: true,
+        normalFill: "#8E8C84",
         onInit: function () {
 
             console.log("On Init");
@@ -80,6 +81,7 @@ function init_(nombre){
         spacing: "5px",
         halfStar: true,
         multiColor: true,
+        normalFill: "#DFD7CA",
         onInit: function () {
 
             console.log("On Init");

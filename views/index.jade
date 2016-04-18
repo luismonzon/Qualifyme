@@ -6,8 +6,10 @@ html
         meta(charset='UTF-8')
         script(src="/socket.io/socket.io.js")
         link(rel='stylesheet', href='stylesheets/jquery.rateyo.min.css')
-        link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
-        link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css')
+        //link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+        //link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css')
+        link(rel='stylesheet', href='stylesheets/bootstrap.css')
+        //link(rel='stylesheet', href='stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/TweetList.css')
         script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular.min.js')
         script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular-resource.min.js')
@@ -67,48 +69,127 @@ html
             }
 
 
+    nav.navbar.navbar-default
+        .container-fluid
+            .navbar-header
+                button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                a.navbar-brand(href='#') QualifyMe
+            #bs-example-navbar-collapse-1.collapse.navbar-collapse
+                ul.nav.navbar-nav
+                    li.active
+                        a(href='#')
+                            | Link
+                            span.sr-only (current)
+                    li
+                        a(href='#') Link
+                    li.dropdown
+                        a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
+                            | Dropdown
+                            span.caret
+                        ul.dropdown-menu(role='menu')
+                            li
+                                a(href='#') Action
+                            li
+                                a(href='#') Another action
+                            li
+                                a(href='#') Something else here
+                            li.divider
+                            li
+                                a(href='#') Separated link
+                            li.divider
+                            li
+                                a(href='#') One more separated link
+                form.navbar-form.navbar-left(role='search')
+                    .form-group
+                        input.form-control(type='text', placeholder='Search')
+                    button.btn.btn-default(type='submit') Submit
+                ul.nav.navbar-nav.navbar-right
+                    li
+                        a(href='#') Link
 
+    h2(align='center') Rating General
 
-h2 Rating General
-    h3 #profesor #curso
-    div(id='rateYo1')
-    div( ng-controller='myCtrl')
+    div( ng-controller='myCtrl', align='center')
+        h4 {{'#' + profesor + ' ' + '#'+curso}}
         br
+        div(id='rateYo1')
         br
-        button(ng-click='myFunc()') Mostrar/Esconder
+
+        button(type='button',class='btn btn-success', ng-click='myFunc()') Qualify!
         br
         div(id='rating', ng-show='showMe' )
-            h4 Votar!
-            p Puntualidad:
-            div(id='rate_puntualidad')
-            p Cumplimiento de horario establecido:
-            div(id='rate_hestablecido')
-            p Asistencia
-            div(id='rate_asistencia')
-            p Trato hacia los estudiantes
-            div(id='rate_trato')
-            p Metodologia
-            div(id='rate_metodologia')
-            p Objetividad
-            div(id='rate_objetividad')
-            p Revision de Examenes
-            div(id='rate_revision')
-            p Transparencia en cuadro de notas
-            div(id='rate_transparencia')
-            p Comunicacion
-            div(id='rate_comunicacion')
-            br
-            button(onclick='get_votes()', ng-click='myFunc()') Votar
+            div(class='container')
+                h4 Votar
+                p
+                | Selecciona
+                a(href='#') la puntuacion
+                |  para cada uno de los aspectos requeridos.
+                table(class='table-responsive')
+                    thead
+                      tr
+                        th Metrica
+                        th Puntuacion
+                    tbody
+                        tr
+                          td Puntualidad:
+                          td
+                            div(id='rate_puntualidad')
+                        tr
+                            td Cumplimiento de horario establecido:
+                            td
+                                div(id='rate_hestablecido')
+                        tr
+                            td Asistencia
+                            td
+                                div(id='rate_asistencia')
+                        tr
+                            td Trato hacia los estudiantes
+                            td
+                                div(id='rate_trato')
+                        tr
+                            td Metodologia
+                            td
+                                div(id='rate_metodologia')
+                        tr
+                            td Objetividad
+                            td
+                                div(id='rate_objetividad')
+                        tr
+                            td Revision de Examenes
+                            td
+                                div(id='rate_revision')
+                        tr
+                            td Transparencia en cuadro de notas
+                            td
+                                div(id='rate_transparencia')
+                        tr
+                            td Comunicacion
+                            td
+                                div(id='rate_comunicacion')
+                        tr
+                            td
+                            td
+                                button(type='button',class='btn btn-primary', ng-click='myFunc()', onclick='get_votes()') Vote
+
+
+
 
     script(type='text/javascript',src='javascripts/jquery.js')
     script(type='text/javascript',src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.0.1/jquery.rateyo.min.js')
     script(type='text/javascript', src='javascripts/rate.js')
-
-    div(ng-controller='TweetList')
+    br
+    br
+    br
+    div(class='container')
+     div(ng-controller='TweetList', align='left')
         .row
             .col-lg-12
                 h1
-                    img#twitter-logo(src='images/Twitter_logo_white.png')
+                    img#twitter-logo(src='images/Twitter_bird_logo_2012.png')
         #search-container.row
             .col-lg-3
                 // this form will trigger the getTweets function in the javascript controller on submit
@@ -124,7 +205,7 @@ h2 Rating General
                     // this div will repeat for every tweet object in the array using a template-expanding directive
                     .tweet-item(ng-repeat='tweet in tweetsResult')
                         // sanitized HTML binding
-                        div(ng-bind-html='tweet.oEmbed.html')
+                        div(ng-bind-html='tweet.oEmbed.html', align='center')
                         // binding to Tweet source property
                         .tweet-details
                             | Tweeted from

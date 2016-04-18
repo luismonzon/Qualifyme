@@ -1,6 +1,8 @@
 var app = angular.module('Twitter', ['ngResource', 'ngSanitize']);
 
 app.controller('myCtrl', function($scope){
+    $scope.profesor = htprofesor;
+    $scope.curso = htcurso;
     $scope.showMe= false;
     $scope.myFunc = function(){
         $scope.showMe = !$scope.showMe;
@@ -16,7 +18,7 @@ app.controller('TweetList', function($scope, $resource, $timeout) {
 
         // set a default username value
         $scope.username = "Qualifyme";
-
+        //$scope.username = htcurso + '#'+htprofesor;//Debe buscar ambos ht. Esto es solo para probar
         // empty tweet model
         $scope.tweetsResult = [];
 

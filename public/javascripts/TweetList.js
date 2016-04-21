@@ -8,7 +8,13 @@ app.controller('myCtrl', function($scope){
         $scope.showMe = !$scope.showMe;
     }
 });
-
+app.controller('grafica',function($scope,$resource,$timeuout){
+    
+    
+   
+    
+    
+});
 app.controller('TweetList', function($scope, $resource, $timeout) {
 
     /**
@@ -42,6 +48,9 @@ app.controller('TweetList', function($scope, $resource, $timeout) {
     /**
      * requests and processes tweet data
      */
+    
+    
+    
     function getTweets (paging) {
 
         var params = {
@@ -87,7 +96,7 @@ app.controller('TweetList', function($scope, $resource, $timeout) {
      * binded to 'Get More Tweets' button
      */
     $scope.getMoreTweets = function () {
-        alert('in');
+        
         getTweets(true);
     }
 

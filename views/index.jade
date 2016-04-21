@@ -116,6 +116,14 @@ html
     div( ng-controller='myCtrl', align='center')
         h4 {{'#' + profesor + ' ' + '#'+curso}}
         br
+        div(class="container")
+            .row(align='center')
+                .col-lg-5
+                    .bs-component
+                        .progress.progress-striped.active
+                            .progress-bar(style='width: 45%')
+
+        br
         div(id='rateYo1')
         br
 

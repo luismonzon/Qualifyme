@@ -1,20 +1,35 @@
 var app = angular.module('Twitter', ['ngResource', 'ngSanitize']);
 
-app.controller('myCtrl', function($scope){
+
+
+app.controller('myCtrl', function($scope,$resource, $timeout){
     $scope.profesor = htprofesor;
     $scope.curso = htcurso;
     $scope.showMe= false;
     $scope.myFunc = function(){
         $scope.showMe = !$scope.showMe;
     }
+
+    var params = {
+        action: 'user_graph',
+        user: htprofesor,
+        isArray:false
+    };
+
+    $scope.Val = $resource('/tweets/:action/:user', params,{query: {method: 'GET', isArray: false }})
+    $scope.Val.query( { }, function (res) {
+        console.log(res.score);
+
+
+            $scope.Percent=(res.score+5)*10;
+
+
+    });
+
+
+
 });
-app.controller('grafica',function($scope,$resource,$timeuout){
-    
-    
-   
-    
-    
-});
+
 app.controller('TweetList', function($scope, $resource, $timeout) {
 
     /**
@@ -23,7 +38,7 @@ app.controller('TweetList', function($scope, $resource, $timeout) {
     function init () {
 
         // set a default username value
-        $scope.username = "Qualifyme";
+        $scope.username = "#ReneOrnelyz,#EDD";
         //$scope.username = htcurso + '#'+htprofesor;//Debe buscar ambos ht. Esto es solo para probar
         // empty tweet model
         $scope.tweetsResult = [];
@@ -71,6 +86,7 @@ app.controller('TweetList', function($scope, $resource, $timeout) {
             if( angular.isUndefined(paging) ) {
                 $scope.tweetsResult = [];
             }
+
 
             $scope.tweetsResult = $scope.tweetsResult.concat(res);
 

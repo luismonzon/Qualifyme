@@ -13,27 +13,49 @@ var TWEET_COUNT = 15;
 var MAX_WIDTH = 305;
 var OEMBED_URL = 'statuses/oembed';
 
-/**
- * GET tweets json.
- */
+
+var connection = mysql.createConnection({
+  host     : '52.38.100.153',//localhost
+  user     : 'myuser', //root
+  password : 'seminario',//050393
+  database : 'Qualifyme_DB'
+});
+
+
+router.get('/user_graph/:user',function(req,res){
+
+  var scor=0;
+  connection.query("select avg(sentimiento) score from Tweet t inner join  PROFESOR p on p.ID_PROFESOR=t.ID_PROFESOR  where HASHTAG='"+req.params.user+"'",function(err,rows){
+    if (err) throw err;
+
+    console.log('Data received from Db:\n');
+    console.log(rows);
+
+    scor=rows[0].score;
+
+    res.setHeader('Content-Type', 'application/json');
+
+    res.send(JSON.stringify({ score: scor }));
+  });
+});
 
 router.get('/user_timeline/:user', function(req, res) {
 
-  var connection = mysql.createConnection({
-    host     : '52.38.100.153',//localhost
-    user     : 'myuser', //root
-    password : 'seminario',//050393
-    database : 'Qualifyme_DB'
-  });
+  var data=req.params.user.split(",");
   var oEmbedTweets = [], tweets = [],
-/*
+      /*
   params = {
     screen_name: req.params.user, // the user id passed in as part of the route
     count: TWEET_COUNT // how many tweets to return
   };
-*/params = {
+
+
+*/
+     
+      
+      params = {
     //q:[ '#'+req.params.user]
-    q:[ '#ReneOrnelyz','#EDD']
+    q:[ data[0],data[1]]
   };
 
   if(req.query.max_id) {

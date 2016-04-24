@@ -116,13 +116,6 @@ html
     div( ng-controller='myCtrl', align='center')
         h4 {{'#' + profesor + ' ' + '#'+curso}}
         br
-        div(class="container")
-            .row(align='center')
-                .col-lg-5
-                    .bs-component
-                        .progress.progress-striped.active
-                            .progress-bar(style='width: 45%')
-
         br
         div(id='rateYo1')
         br
@@ -182,7 +175,12 @@ html
                             td
                             td
                                 button(type='button',class='btn btn-primary', ng-click='myFunc()', onclick='get_votes()') Vote
-
+    div(ng-show='false',class="container", align='center')
+        .row(align='center')
+            .col-lg-5
+                .bs-component
+                    .progress.progress-striped.active
+                        .progress-bar(style='width: 100%')
 
 
 
@@ -202,11 +200,11 @@ html
             .col-lg-3
                 // this form will trigger the getTweets function in the javascript controller on submit
                 form.input-group(ng-submit='getTweets()')
-                    span.input-group-addon #
+                    //span.input-group-addon #
                     // this text input is binded to a variable in the javascript controller
-                    input.form-control(type='text', placeholder='Hashtag', ng-model='username')
-                    span.input-group-btn
-                        button.btn.btn-default(type='submit') Get Tweets
+                    //input.form-control(type='text', placeholder='Hashtag', ng-model='username')
+                    //span.input-group-btn
+                        //button.btn.btn-default(type='submit') Get Tweets
         .row.clearfix
             .col-lg-12
                 #tweet-list

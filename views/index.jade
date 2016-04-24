@@ -69,7 +69,7 @@ html
             }
 
 
-    nav.navbar.navbar-default
+    nav.navbar.navbar-default(ng-controller='TweetList' )
         .container-fluid
             .navbar-header
                 button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
@@ -103,10 +103,10 @@ html
                             li.divider
                             li
                                 a(href='#') One more separated link
-                form.navbar-form.navbar-left(role='search')
+                form.navbar-form.navbar-left(ng-submit='getTweets()')
                     .form-group
-                        input.form-control(type='text', placeholder='Search')
-                    button.btn.btn-default(type='submit') Submit
+                        input.form-control(type='text', placeholder='#Profesor, #Curso', ng-model='username')
+                    button.btn.btn-default(type='submit') Get Tweets
                 ul.nav.navbar-nav.navbar-right
                     li
                         a(href='#') Link
@@ -116,12 +116,14 @@ html
     div( ng-controller='myCtrl', align='center')
         h4 {{'#' + profesor + ' ' + '#'+curso}}
         br
+
         div(class="container")
             .row(align='center')
-                .col-lg-5
+                .col-lg-4
+                .col-lg-4
                     .bs-component
                         .progress.progress-striped.active
-                            .progress-bar(style='width: 45%')
+                            .progress-bar(ng-style="{ 'width': Percent + '%' }")
 
         br
         div(id='rateYo1')
@@ -201,12 +203,8 @@ html
         #search-container.row
             .col-lg-3
                 // this form will trigger the getTweets function in the javascript controller on submit
-                form.input-group(ng-submit='getTweets()')
-                    span.input-group-addon #
-                    // this text input is binded to a variable in the javascript controller
-                    input.form-control(type='text', placeholder='Hashtag', ng-model='username')
-                    span.input-group-btn
-                        button.btn.btn-default(type='submit') Get Tweets
+
+
         .row.clearfix
             .col-lg-12
                 #tweet-list

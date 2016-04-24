@@ -6,11 +6,10 @@ html
         meta(charset='UTF-8')
         script(src="/socket.io/socket.io.js")
         link(rel='stylesheet', href='stylesheets/jquery.rateyo.min.css')
-        //link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
-        //link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css')
         link(rel='stylesheet', href='stylesheets/bootstrap.css')
-        //link(rel='stylesheet', href='stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/TweetList.css')
+        link(rel='stylesheet', type='text/css', href='stylesheets/jquery-comments.css')
+        link(rel='stylesheet', type='text/css', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
         script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular.min.js')
         script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular-resource.min.js')
         script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular-sanitize.min.js')
@@ -18,57 +17,108 @@ html
         script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js')
         script(src='//platform.twitter.com/widgets.js')
         script(src='/javascripts/TweetList.js')
-
+        script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+        script(type='text/javascript', src='javascripts/jquery-comments.js')
+        script(type='text/javascript', src='javascripts/comments-data.js')
+        script(src="/javascripts/fb-log.js")
 
     body(ng-app='Twitter')
+
         script.
-            var htprofesor = 'ReneOrnelyz';
-            var htcurso = 'EDD';
-            var mirating = 0;
-            var socket = io.connect();
-            var peticion = {profesor:'ReneOrnelyz', curso:'EDD'};
-            var mi_voto = {
-                profesor: htprofesor,
-                curso: htcurso,
-                puntualidad: '0',
-                c_horario: '0',
-                asistencia: '0',
-                t_estudiantes: '0',
-                metodologia: '0',
-                objetividad: '0',
-                revision: '0',
-                transparencia: '0',
-                comunicacion: '0'
+            // This is called with the results from from FB.getLoginStatus().
+            function statusChangeCallback(response) {
+                console.log('statusChangeCallback');
+                console.log(response);
+                // The response object is returned with a status field that lets the
+                // app know the current login status of the person.
+                // Full docs on the response object can be found in the documentation
+                // for FB.getLoginStatus().
+                if (response.status === 'connected') {
+                    // Logged into your app and Facebook.
+                    testAPI();
+                } else if (response.status === 'not_authorized') {
+                    // The person is logged into Facebook, but not your app.
+                    document.getElementById('status').innerHTML = 'Please log ' +
+                            'into this app.';
+                    angular.element(document.getElementById('FB_Wrap')).scope().sh_fb_button();
+                } else {
+                    // The person is not logged into Facebook, so we're not sure if
+                    // they are logged into this app or not.
+                    document.getElementById('status').innerHTML = 'Please log ' +
+                            'into Facebook.';
+                    angular.element(document.getElementById('FB_Wrap')).scope().sh_fb_button();
+                }
+            }
+            // This function is called when someone finishes with the Login
+            // Button.  See the onlogin handler attached to it in the sample
+            // code below.
+            function checkLoginState() {
+                FB.getLoginStatus(function (response) {
+                    statusChangeCallback(response);
+                });
+            }
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '1080806451981964',
+                    cookie: true,  // enable cookies to allow the server to access
+                    // the session
+                    xfbml: true,  // parse social plugins on this page
+                    version: 'v2.5' // use graph api version 2.5
+                });
+                // Now that we've initialized the JavaScript SDK, we call
+                // FB.getLoginStatus().  This function gets the state of the
+                // person visiting this page and can return one of three states to
+                // the callback you provide.  They can be:
+                //
+                // 1. Logged into your app ('connected')
+                // 2. Logged into Facebook, but not your app ('not_authorized')
+                // 3. Not logged into Facebook and can't tell if they are logged into
+                //    your app or not.
+                //
+                // These three cases are handled in the callback function.
+                FB.getLoginStatus(function (response) {
+                    statusChangeCallback(response);
+                });
             };
-            var puntuacion = 0;
-            socket.emit('req_info', JSON.stringify(peticion));
-            socket.on('Qresult', function (data) {
-                console.log('el resultado es: ' + data);
-                mirating = data;
-                $("#rateYo1").rateYo("option", "rating", mirating);
-            });
-            socket.on('Qvote', function (data) {
-                console.log('Has votado tio!');
-                //emitimos la peticion de calificacion general, para poder actualizar los resultados.
-                socket.emit('req_info', JSON.stringify(peticion));
-            });
-            function vote(){
-                socket.emit('vote', JSON.stringify(mi_voto));
-            }
-            function get_votes() {
-                mi_voto.puntualidad = $("#rate_puntualidad").rateYo("option", "rating");
-                mi_voto.c_horario = $("#rate_hestablecido").rateYo("option", "rating");
-                mi_voto.asistencia = $("#rate_asistencia").rateYo("option", "rating");
-                mi_voto.t_estudiantes = $("#rate_trato").rateYo("option", "rating");
-                mi_voto.metodologia = $("#rate_metodologia").rateYo("option", "rating");
-                mi_voto.objetividad = $("#rate_objetividad").rateYo("option", "rating");
-                mi_voto.revision = $("#rate_revision").rateYo("option", "rating");
-                mi_voto.transparencia = $("#rate_transparencia").rateYo("option", "rating");
-                mi_voto.comunicacion = $("#rate_comunicacion").rateYo("option", "rating");
-                vote();
-            }
+            // Load the SDK asynchronously
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+            // Here we run a very simple test of the Graph API after login is
+            // successful.  See statusChangeCallback() for when this call is made.
+            function testAPI() {
+                console.log('Welcome!  Fetching your information.... ');
+                FB.api('/me', function (response) {
+                    console.log('Successful login for: ' + response.name);
+                    document.getElementById('status').innerHTML =
+                            'Thanks for logging in, ' + response.name + '!';
+                    var post = "1165440753479632_1165506266806414";
+                    addC(post);
+                    display(false, post);
+                    $('#comments-container').comments({
+                        youText: response.name
+                    });
+
+                    FB.api('/me/picture', function (response) {
+                        $('#comments-container').comments({
+                            profilePictureURL: response.data.url
+                        });
+
+                    });
+
+                });
 
 
+
+
+            }
+    //aquiva qualify.js
+    script(type='text/javascript', src='javascripts/qualify.js')
     nav.navbar.navbar-default(ng-controller='TweetList' )
         .container-fluid
             .navbar-header
@@ -116,8 +166,7 @@ html
     div( ng-controller='myCtrl', align='center')
         h4 {{'#' + profesor + ' ' + '#'+curso}}
         br
-<<<<<<< HEAD
-=======
+
 
         div(class="container")
             .row(align='center')
@@ -127,7 +176,6 @@ html
                         .progress.progress-striped.active
                             .progress-bar(ng-style="{ 'width': Percent + '%' }")
 
->>>>>>> 484eb27fedc7c32b41d1befd716af5545cfe408f
         br
         div(id='rateYo1')
         br
@@ -196,14 +244,14 @@ html
 
 
 
-    script(type='text/javascript',src='javascripts/jquery.js')
+    //script(type='text/javascript',src='javascripts/jquery.js')
     script(type='text/javascript',src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.0.1/jquery.rateyo.min.js')
     script(type='text/javascript', src='javascripts/rate.js')
     br
     br
     br
     div(class='container')
-     div(ng-controller='TweetList', align='left')
+      div(ng-controller='TweetList', align='left')
         .row
             .col-lg-12
                 h1
@@ -211,17 +259,13 @@ html
         #search-container.row
             .col-lg-3
                 // this form will trigger the getTweets function in the javascript controller on submit
-<<<<<<< HEAD
                 form.input-group(ng-submit='getTweets()')
                     //span.input-group-addon #
                     // this text input is binded to a variable in the javascript controller
                     //input.form-control(type='text', placeholder='Hashtag', ng-model='username')
                     //span.input-group-btn
                         //button.btn.btn-default(type='submit') Get Tweets
-=======
 
-
->>>>>>> 484eb27fedc7c32b41d1befd716af5545cfe408f
         .row.clearfix
             .col-lg-12
                 #tweet-list
@@ -240,6 +284,23 @@ html
             .col-lg-12
                 // this button will trigger the getMoreTweets function in the javascript controller
                 button.load-more-btn.btn.btn-default(type='button', ng-click='getMoreTweets()') Get More Tweets
+    br
+    br
 
+    script(type='text/javascript', src='javascripts/j-comments-load.js')
+    div(class='container',id='FB_Wrap', ng-controller='myCtrl')
+        .row
+            .col-lg-12
+                h1
+                    img#twitter-logo(src='images/facebook-flat-vector-logo-400x400.png')
 
+        fb:login-button(id='clickbutton',scope='public_profile,email',ng-show='fb_button', onlogin='checkLoginState();')
+        #status
+        .row
+            .col-lg-12
+                // this button will trigger the getMoreTweets function in the javascript controller
+                button(type='button',class="btn btn-warning", ng-click='sh_fb()') Show/hide FB comments!
+        br
+        br
+        div(id='comments-container', ng-show='showFB')
 

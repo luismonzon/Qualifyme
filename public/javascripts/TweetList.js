@@ -6,8 +6,16 @@ app.controller('myCtrl', function($scope,$resource, $timeout){
     $scope.profesor = htprofesor;
     $scope.curso = htcurso;
     $scope.showMe= false;
+    $scope.showFB= false;
+    $scope.fb_button= false;
     $scope.myFunc = function(){
-        $scope.showMe = !$scope.showMe;
+        $scope.showMe = !$scope.showMe; //oculta o muestra el contenido para rating anonimo
+    }
+    $scope.sh_fb = function(){
+        $scope.showFB = !$scope.showFB;
+    }
+    $scope.sh_fb_button = function(){
+        $scope.fb_button=true;
     }
 
     var params = {
@@ -18,11 +26,11 @@ app.controller('myCtrl', function($scope,$resource, $timeout){
 
     $scope.Val = $resource('/tweets/:action/:user', params,{query: {method: 'GET', isArray: false }})
     $scope.Val.query( { }, function (res) {
-        console.log(res.score);
+        //console.log(res.score);
 
 
             $scope.Percent=(res.score+5)*10;
-
+            console.log("porcentaje: "+$scope.Percent);
 
     });
 

@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var sentiment = require('sentiment-spanish');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -156,6 +157,65 @@ function promedio_ponderado(p, c, a,t, m, o ,r, tr, com) {
   return ((p*1)+ (c*1) + (a*1) + (t*1)+ (m*1) + (o*1) + (r*1) + (tr*1) +(com*1))/9;
 }
 
+function FB_init_carga(data, socket){
+  //primero debemos obtener el ID del post del cual estos comentarios son hijos
+  get_PostID(data,socket);
+
+}
+
+function get_PostID(data, socket){
+    var resultado=-1;
+    var myQuery= "SELECT ID_POST, ID_ORIGINAL from POST " +
+        "where ID_PROFESOR IN(" +
+        "SELECT ID_PROFESOR from PROFESOR where HASHTAG='"+data.profesor+"'" +
+        ") " +
+        "AND ID_CURSO IN(" +
+        "select ID_CURSO from CURSO where HASHTAG='"+data.curso+"'" +
+        ")"
+    //console.log(myQuery);
+    connection.query(myQuery, function(err, rows, fields) {
+        if (err) throw err;
+        resultado = rows[0].ID_POST;
+        insert_post_comments(data,socket, resultado);
+    });
+}
+
+function insert_post_comments(data,socket, resultado){
+    for(comment in data.comments){
+        var result = sentiment(data.comments[comment].content, {
+            'no': -1
+        });
+        add_comment(data.comments[comment],resultado, result.score);
+    }
+}
+
+/*
+   Con este metodo insertamos los comentarios nuevos a la base de datos.
+   La insercion es asincronica, por lo que no afectara al rendimiento de la pagina mientras el usuario navega.
+   Se hace un conteo antes de insertar, para poder saber si el elemento ya se encuentra almacenado en la base de datos.
+   Solamente se almacenan los elementos que no se tienen en la base de datos. 
+
+ */
+function add_comment(comment, padre, score){
+    var total = "select COUNT(ID_ORIGINAL) AS TOTAL from COMENTARIO WHERE ID_ORIGINAL="+comment.id;
+    connection.query(total, function(err, rows, fields) {
+        if (err) throw err;
+        var resultado2 = rows[0].TOTAL;
+        if(resultado2==0) {
+            //console.log('INSERTA');
+            var myQuery = "INSERT INTO COMENTARIO(`ID_ORIGINAL`,`MENSAJE`,`FECHA`,`ID_POST`,`puntuacion`) " +
+                "VALUES(" + comment.id + ",'" + comment.content + "','" + comment.created + "'," + padre + "," + score + ")";
+            //console.log(myQuery);
+            connection.query(myQuery, function (err, rows, fields) {
+                if (err) {
+                }
+                ;
+            });
+        }
+    });
+
+}
+
 app.io.on('connection', function(socket){
   console.log('a user connected');
   //solve();
@@ -169,6 +229,11 @@ app.io.on('connection', function(socket){
     var objeto;
     objeto = JSON.parse(data);
     votar(objeto, socket);
+  });
+  socket.on('store-comm',function (data) {
+     //console.log(data);
+     FB_init_carga(data,socket);
+
   });
 });
 

@@ -1,0 +1,73 @@
+en el raspberry:
+sudo java -cp ".:/home/abel/rabbitmq-client.jar:/home/abel/jade/lib/jade.jar:/opt/pi4j/lib/*" jade.Boot -gui -host 192.168.43.219 //ip de la rasp
+
+en mi pc:
+
+java jade.Boot -container -host 192.168.43.219 -local-host 192.168.43.189 -gui receptor:receptor
+
+//luego en mi pc ejecutamos el nuevo
+
+BLANCO:
+rojo  255 
+verde 255
+azul  255
+
+
+ROJO
+rojo  255
+verde  0
+azul   0
+
+NEGRO
+rojo  0 
+verde 0
+azul  0
+
+lunes a vier 8 a 16 horas
+22858000 
+2
+1
+paola romero
+
+document.getElementById('status').innerHTML =
+'Tam:  ' + total + '!';
+
+queries: 
+comentarios:
+post_id/comments
+
+tiempo: 
+687778671243318/feed?since=2016-04-01
+hashtags: 
+
+PARA INSERTAR POST A LA PAGINA
+INSERT INTO `Qualifyme_DB`.`POST`
+(
+`ID_ORIGINAL`,
+`MENSAJE`,
+`FECHA`,
+`ID_PROFESOR`,
+`ID_CURSO`)
+VALUES
+(
+1165506266806414,
+'#algo asdfasdf',
+'2016-04-11T22:14:12+0000',
+1,
+1);
+SELECT * FROM Qualifyme_DB.POST;
+
+al crear la union profesor-clase, creamos un post unico con la pregunta respectiva.
+AL asociar comentarios, buscamos la union ht curso y profesor y con eso 
+obtenemos el id del post con la pregunta para poder asociar. 
+
+
+Con el siguiente query obtengo el ID del post original de fb
+para asignarlo con sus hijos respetivos
+SELECT ID_POST, ID_ORIGINAL from POST
+where ID_PROFESOR IN(
+SELECT ID_PROFESOR from PROFESOR where HASHTAG='ReneOrnelyz'
+)
+AND ID_CURSO IN(
+select ID_CURSO from CURSO where HASHTAG='EDD'
+)

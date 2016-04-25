@@ -60,27 +60,17 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
+//------------------------------------------------- MySQL methods for FB and Rating -----------------------------------------//
 var connection = mysql.createConnection({
   host     : '52.38.100.153',//localhost
   user     : 'myuser', //root
   password : 'seminario',//050393
   database : 'Qualifyme_DB'
 });
-
-
-function solve(){
-  //connection.connect();
-
-  connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
-    if (err) throw err;
-
-    console.log('The solution is: ', rows[0].solution);
-  });
-
-  // connection.end();
-}
-
+/*
+Metodo para obtener la puntuacion en ESTRELLAS sobre
+algun catedratico junto con el curso.
+ */
 function puntuacion_general(profesor, curso, socket){
   //connection.connect();
   var resultado=0;
@@ -97,6 +87,11 @@ function puntuacion_general(profesor, curso, socket){
 
   //connection.end();
 }
+
+/*
+Metodo para registrar el voto generado de forma anonima
+
+ */
 
 function votar(data, socket){
 
@@ -122,7 +117,6 @@ function votar(data, socket){
           data.transparencia,
           data.comunicacion
       );
-      console.log(miTotal);
 
       var myQuery3="INSERT INTO CALIFICACION " +
           "(`PID_CURSO`,`PID_PROFESOR`,`PUNTUALIDAD`,`C_HORARIO`,`ASISTENCIA`,`T_ESTUDIANTES`,`METODOLOGIA`,`OBJETIVIDAD`,`REVISION`,`TRANSPARENCIA`,`COMUNICACION`,`TOTAL`)" +
@@ -142,8 +136,6 @@ function votar(data, socket){
           ");"
       connection.query(myQuery3, function(err, rows, fields){
         if(err) throw err;
-
-        console.log(myQuery3);
         socket.emit('Qvote');
       });
     });
@@ -153,16 +145,25 @@ function votar(data, socket){
 
 }
 
+/*
+Calculo del punteo general de una calificacion.
+Las metricas son evaluadas segun su peso.
+ */
+
 function promedio_ponderado(p, c, a,t, m, o ,r, tr, com) {
   return ((p*1)+ (c*1) + (a*1) + (t*1)+ (m*1) + (o*1) + (r*1) + (tr*1) +(com*1))/9;
 }
 
+//-----------------------------------------------Metodos para el almacenaje de post y comentarios de FB --------------------------------------------//
 function FB_init_carga(data, socket){
   //primero debemos obtener el ID del post del cual estos comentarios son hijos
   get_PostID(data,socket);
 
 }
 
+/*
+Obtiene el ID del post que corresponde a la pareja catedratico-curso
+ */
 function get_PostID(data, socket){
     var resultado=-1;
     var myQuery= "SELECT ID_POST, ID_ORIGINAL from POST " +
@@ -179,6 +180,11 @@ function get_PostID(data, socket){
         insert_post_comments(data,socket, resultado);
     });
 }
+
+/*
+    Iteracion sobre los comentarios de un post, para poder
+    hacer el posterior analisis con la herramienta sentiment,
+ */
 
 function insert_post_comments(data,socket, resultado){
     for(comment in data.comments){
@@ -216,11 +222,27 @@ function add_comment(comment, padre, score){
 
 }
 
+/*
+Calculo del sentimiento general, obteniendo un promedio de los coments en fb
+como los twits de Twitter.
+Se maneja un promedio para cada uno, posteriormente dicho promedio se promedia entre si, para
+obtener un promedio general entre ambas plataformas.
+ */
+
+function AVG(data, socket){
+    var myQuery= "call avgFB('"+data.prof+"','"+data.curs+"')";
+    connection.query(myQuery, function(err, rows) {
+        if (err) throw err;
+        var myScore = rows[0][0].PUNTUACION;
+        myScore = (Number(myScore) + Number(data.score))/2;
+        socket.emit('SMoodBar', myScore);
+    });
+}
+
+
+//------------------------------- Manejo de sockets -----------------------------------------------------------------------//
 app.io.on('connection', function(socket){
-  console.log('a user connected');
-  //solve();
   socket.on('req_info', function(data){
-    //data es un JSON con profesor y curso
     var objeto = JSON.parse(data);
     puntuacion_general(objeto.profesor, objeto.curso, socket);
   });
@@ -231,10 +253,12 @@ app.io.on('connection', function(socket){
     votar(objeto, socket);
   });
   socket.on('store-comm',function (data) {
-     //console.log(data);
      FB_init_carga(data,socket);
 
   });
+    socket.on('MoodBar',function (data) {
+        AVG(data,socket);
+    });
 });
 
 

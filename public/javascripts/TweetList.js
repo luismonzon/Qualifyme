@@ -7,12 +7,20 @@ app.controller('myCtrl', function($scope,$resource, $timeout){
     $scope.curso = htcurso;
     $scope.showMe= false;
     $scope.showFB= false;
+    $scope.messageFB="Show";
     $scope.fb_button= false;
+    $scope.rate = mirating;
     $scope.myFunc = function(){
         $scope.showMe = !$scope.showMe; //oculta o muestra el contenido para rating anonimo
     }
     $scope.sh_fb = function(){
         $scope.showFB = !$scope.showFB;
+        if($scope.messageFB == "Show"){
+            $scope.messageFB="Hide";
+        }else{
+            $scope.messageFB="Show";
+        }
+        console.log($scope.messageFB);
     }
     $scope.sh_fb_button = function(){
         $scope.fb_button=true;
@@ -27,15 +35,17 @@ app.controller('myCtrl', function($scope,$resource, $timeout){
     $scope.Val = $resource('/tweets/:action/:user', params,{query: {method: 'GET', isArray: false }})
     $scope.Val.query( { }, function (res) {
         //console.log(res.score);
-
-
-            $scope.Percent=(res.score+5)*10;
-            console.log("porcentaje: "+$scope.Percent);
-
+            var object = {
+                prof: htprofesor,
+                curs: htcurso,
+                score: res.score
+            }
+            socket.emit('MoodBar', object );
+             socket.on('SMoodBar',function (data) {
+                 $scope.Percent=(data+5)*10;
+             });
     });
-
-
-
+    
 });
 
 app.controller('TweetList', function($scope, $resource, $timeout) {

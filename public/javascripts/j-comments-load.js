@@ -11,7 +11,7 @@
             enableUpvoting: false,
             enableEditing: false,
             enableReplying: true,
-            forceResponsive: true,
+            forceResponsive: false,
             readOnly: Boolean(valor),
             getComments: function (success, error) {
                 setTimeout(function () {

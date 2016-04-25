@@ -28,8 +28,8 @@ router.get('/user_graph/:user',function(req,res){
   connection.query("select avg(sentimiento) score from Tweet t inner join  PROFESOR p on p.ID_PROFESOR=t.ID_PROFESOR  where HASHTAG='"+req.params.user+"'",function(err,rows){
     if (err) throw err;
 
-    console.log('Data received from Db:\n');
-    console.log(rows);
+    //console.log('Data received from Db:\n');
+    //console.log(rows);
 
     scor=rows[0].score;
 
@@ -66,7 +66,7 @@ router.get('/user_timeline/:user', function(req, res) {
   twitter.get('search/tweets', params, function (err, data, resp) {
 
     tweets = data;
-    console.log(data);
+    //console.log(data);
     var i = 0, len = tweets.statuses.length;
     for(i; i < len; i++) {
       getSentiment(tweets.statuses[i].text,tweets.statuses[i].entities.hashtags,tweets.statuses[i].id,tweets.statuses[i].created_at);
@@ -95,8 +95,8 @@ router.get('/user_timeline/:user', function(req, res) {
       connection.query("CALL insertTweet("+id+",'"+data+"','"+datetwit+"','"+hash1+"','"+hash2+"','"+r1.score+"')",function(err,rows){
         if (err) throw err;
 
-        console.log('Data received from Db:\n');
-        console.log(rows);
+        //console.log('Data received from Db:\n');
+        //console.log(rows);
       });
 
     }

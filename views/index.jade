@@ -40,12 +40,21 @@ html
                     // The person is logged into Facebook, but not your app.
                     document.getElementById('status').innerHTML = 'Please log ' +
                             'into this app.';
+                    /*document.getElementById('status').innerHTML="<div class='alert alert-dismissible alert-info'>" +
+                            "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                            "<strong>Heads up!</strong> This <a href='#' class='alert-link'>alert needs your attention</a>, but it's not super important." +
+                            "</div>";*/
                     angular.element(document.getElementById('FB_Wrap')).scope().sh_fb_button();
                 } else {
                     // The person is not logged into Facebook, so we're not sure if
                     // they are logged into this app or not.
                     document.getElementById('status').innerHTML = 'Please log ' +
                             'into Facebook.';
+
+                    /*document.getElementById('status').innerHTML = "<div class='alert alert-dismissible alert-info'>" +
+                            "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                            "Plese log into Facebook"+
+                            "</div>";*/
                     angular.element(document.getElementById('FB_Wrap')).scope().sh_fb_button();
                 }
             }
@@ -95,8 +104,6 @@ html
                 console.log('Welcome!  Fetching your information.... ');
                 FB.api('/me', function (response) {
                     console.log('Successful login for: ' + response.name);
-                    document.getElementById('status').innerHTML =
-                            'Thanks for logging in, ' + response.name + '!';
                     var post = "1165440753479632_1165506266806414";
                     addC(post);
                     display(false, post);
@@ -167,16 +174,20 @@ html
         h4 {{'#' + profesor + ' ' + '#'+curso}}
         br
 
-
+        h5 Puntuacion en redes sociales: {{Percent +'%'}}
         div(class="container")
             .row(align='center')
                 .col-lg-4
                 .col-lg-4
                     .bs-component
                         .progress.progress-striped.active
-                            .progress-bar(ng-style="{ 'width': Percent + '%' }")
+                            .progress-bar(ng-class="{'progress-bar-danger': Percent < 34, " +
+                            "'progress-bar-warning': Percent < 67, " +
+                            "'progress-bar-success': Percent > 66}"
+                            ,ng-style="{ 'width': Percent + '%' }")
 
         br
+        h5 Puntuacion en QualifyMe:
         div(id='rateYo1')
         br
 
@@ -293,13 +304,13 @@ html
             .col-lg-12
                 h1
                     img#twitter-logo(src='images/facebook-flat-vector-logo-400x400.png')
-
-        fb:login-button(id='clickbutton',scope='public_profile,email',ng-show='fb_button', onlogin='checkLoginState();')
         #status
+        fb:login-button(id='clickbutton',scope='public_profile,email',ng-show='fb_button', onlogin='checkLoginState();')
+
         .row
             .col-lg-12
                 // this button will trigger the getMoreTweets function in the javascript controller
-                button(type='button',class="btn btn-warning", ng-click='sh_fb()') Show/hide FB comments!
+                button(type='button',class="btn btn-warning", ng-click='sh_fb()') {{ messageFB + ' FB comments!'}}
         br
         br
         div(id='comments-container', ng-show='showFB')

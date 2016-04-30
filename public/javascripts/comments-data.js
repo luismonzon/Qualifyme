@@ -148,8 +148,6 @@ function addC(postID){
                     profile: comm.profile_picture_url
                 };
                 if(callA==0){ // cuando todos los callbacks han sido ejecutados, podemos renderizar el arbol de comentarios.
-                    console.log("RENDERIZANDO");
-                    console.log(commentsArray);
                     $('#comments-container').comments({
                         refresh: function() {
                             $('#comments-container').addClass('rendered');

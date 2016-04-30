@@ -33,10 +33,12 @@
                         error(data);
                     }, 500);
                 } else {
+
                     comment(id, data);
-                    setTimeout(function () {
-                        success(data);
-                    }, 500);
+                            setTimeout(function () {
+                                success(data);
+                            }, 500);
+
                 }
 
 

@@ -56,7 +56,7 @@ app.controller('TweetList', function($scope, $resource, $timeout) {
     function init () {
 
         // set a default username value
-        $scope.username = "#ReneOrnelyz,#EDD";
+        $scope.username = $scope.username = "#"+local_data.prof+",#"+local_data.curs;
         //$scope.username = htcurso + '#'+htprofesor;//Debe buscar ambos ht. Esto es solo para probar
         // empty tweet model
         $scope.tweetsResult = [];

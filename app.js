@@ -9,6 +9,9 @@ var sentiment = require('sentiment-spanish');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var tweets = require('./routes/tweets');
+var qm_info = require('./routes/qm_info')
+var menu = require('./routes/menu');
+var qualify = require('./routes/qualify');
 var http= require('http');
 var mysql = require('mysql');
 var app = express();
@@ -28,6 +31,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/tweets', tweets);
+app.use('/menu', menu);
+app.use('/qualify', qualify);
+app.use('/qm_info', qm_info);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -157,7 +163,25 @@ function promedio_ponderado(p, c, a,t, m, o ,r, tr, com) {
 //-----------------------------------------------Metodos para el almacenaje de post y comentarios de FB --------------------------------------------//
 function FB_init_carga(data, socket){
   //primero debemos obtener el ID del post del cual estos comentarios son hijos
-  get_PostID(data,socket);
+  //verificamos que tenga un post de fb asociado
+
+    var resultado=-1;
+    var myQuery= "SELECT count(ID_POST) as TOTAL from POST " +
+        "where ID_PROFESOR IN(" +
+        "SELECT ID_PROFESOR from PROFESOR where HASHTAG='"+data.profesor+"'" +
+        ") " +
+        "AND ID_CURSO IN(" +
+        "select ID_CURSO from CURSO where HASHTAG='"+data.curso+"'" +
+        ")"
+    //console.log(myQuery);
+    connection.query(myQuery, function(err, rows, fields) {
+        if (err) throw err;
+        resultado = rows[0].TOTAL;
+        if(resultado > 0){
+            get_PostID(data,socket);
+        }
+    });
+
 
 }
 

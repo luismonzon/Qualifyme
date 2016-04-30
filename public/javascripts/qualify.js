@@ -1,8 +1,10 @@
-var htprofesor = 'ReneOrnelyz';
-var htcurso = 'EDD';
+
+var htprofesor = local_data.prof; //'ReneOrnelyz';
+var htcurso = local_data.curs;//'EDD';
+console.log("QUALIFY: "+local_data.id);
 var mirating = 0;
 var socket = io.connect();
-var peticion = {profesor:'ReneOrnelyz', curso:'EDD'};
+var peticion = {profesor:htprofesor, curso:htcurso};
 var mi_voto = {
     profesor: htprofesor,
     curso: htcurso,

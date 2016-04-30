@@ -40,7 +40,7 @@ function obtener_posts(){
 }
 
 function comment(id,data){
-    FB.api(
+    var answer = FB.api(
         "/" + id + "/comments",
         "POST",
         {
@@ -52,15 +52,23 @@ function comment(id,data){
                 //volvemos a cargar
                 //empty_array();
                 //addC();
-
             }else{
                 console.log('NO func '+id);
                 if(id.indexOf('c')>-1){
                     console.log("vuelve a cargar la pagina");
                 }else {
                     var correccion = buscar(id);
-                    console.log('CORRECCION: ' + correccion);
-                    comment(correccion, data);
+                    if(correccion!=undefined) {
+                        console.log('CORRECCION: ' + correccion);
+                        comment(correccion, data);
+                    }else{
+                        var ok = confirm("Lo sentimos, debes unirte al siguiente grupo para poder comentar. Selecciona OK, para ser redirigido al grupo. ");
+                        if(ok){
+                            window.location="https://www.facebook.com/groups/1165440753479632/";
+                        }else{
+                            location.reload();
+                        }
+                    }
                 }
             }
         }

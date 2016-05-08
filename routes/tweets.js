@@ -15,7 +15,7 @@ var OEMBED_URL = 'statuses/oembed';
 
 
 var connection = mysql.createConnection({
-  host     : '52.38.100.153',//localhost
+  host     : '52.36.161.208',//localhost
   user     : 'myuser', //root
   password : 'seminario',//050393
   database : 'Qualifyme_DB'

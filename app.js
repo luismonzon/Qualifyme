@@ -12,6 +12,8 @@ var tweets = require('./routes/tweets');
 var qm_info = require('./routes/qm_info')
 var menu = require('./routes/menu');
 var qualify = require('./routes/qualify');
+var request_token = require('./routes/request_token');
+var tcallback = require('./routes/tcallback');
 var http= require('http');
 var mysql = require('mysql');
 var app = express();
@@ -34,6 +36,8 @@ app.use('/tweets', tweets);
 app.use('/menu', menu);
 app.use('/qualify', qualify);
 app.use('/qm_info', qm_info);
+app.use('/request_token', request_token);
+app.use('/tcallback', tcallback);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -68,7 +72,7 @@ app.use(function(err, req, res, next) {
 
 //------------------------------------------------- MySQL methods for FB and Rating -----------------------------------------//
 var connection = mysql.createConnection({
-  host     : '52.38.100.153',//localhost
+  host     : '52.36.161.208',//localhost
   user     : 'myuser', //root
   password : 'seminario',//050393
   database : 'Qualifyme_DB'
@@ -86,7 +90,6 @@ function puntuacion_general(profesor, curso, socket){
   connection.query(myQuery, function(err, rows, fields) {
     if (err) throw err;
     resultado = rows[0].TOTAL;
-    console.log('El total es: ', resultado);
     //emitimos el mensaje en este punto.
     socket.emit('Qresult', resultado);
   });
@@ -259,6 +262,7 @@ function AVG(data, socket){
         if (err) throw err;
         var myScore = rows[0][0].PUNTUACION;
         myScore = (Number(myScore) + Number(data.score))/2;
+        console.log("MOOD BAR EMITIDO");
         socket.emit('SMoodBar', myScore);
     });
 }
@@ -268,6 +272,7 @@ function AVG(data, socket){
 app.io.on('connection', function(socket){
   socket.on('req_info', function(data){
     var objeto = JSON.parse(data);
+    console.log('req_info');  
     puntuacion_general(objeto.profesor, objeto.curso, socket);
   });
   socket.on('vote', function(data){

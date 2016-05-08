@@ -10,6 +10,10 @@ app.controller('myCtrl', function($scope,$resource, $timeout){
     $scope.messageFB="Show";
     $scope.fb_button= false;
     $scope.rate = mirating;
+    $scope.Percent = 0;
+    $scope.$watch('Percent', function() {
+        console.log('hey, myVar has changed!');
+    });
     $scope.myFunc = function(){
         $scope.showMe = !$scope.showMe; //oculta o muestra el contenido para rating anonimo
     }
@@ -43,8 +47,12 @@ app.controller('myCtrl', function($scope,$resource, $timeout){
             socket.emit('MoodBar', object );
              socket.on('SMoodBar',function (data) {
                  $scope.Percent=(data+5)*10;
+                 $scope.$apply();
              });
     });
+
+
+
     
 });
 

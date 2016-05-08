@@ -21,7 +21,6 @@ var mi_voto = {
 var puntuacion = 0;
 socket.emit('req_info', JSON.stringify(peticion));
 socket.on('Qresult', function (data) {
-    console.log('el resultado es: ' + data);
     mirating = data;
     $("#rateYo1").rateYo("option", "rating", mirating);
 });

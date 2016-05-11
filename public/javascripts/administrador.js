@@ -235,3 +235,139 @@ app.controller('Cursos', ['$scope','$http', function($scope,$http){
     };
 
 }]);
+
+
+
+
+
+app.controller('Asignacion', ['$scope','$http', function($scope,$http){
+
+
+    $scope.prueba = $http.get('/asignacion/getcurso').then(
+        function(result) {
+            console.log(result.data);
+
+            $scope.data_curso={repeatSelect: null, availableOptions: {}}
+            $scope.data_curso.availableOptions=result.data;
+            console.log($scope.data_curso);
+        });
+    
+    $scope.prueba = $http.get('/asignacion/getprofesor').then(
+        function(result) {
+
+
+            $scope.data_prof={repeatSelect: null, availableOptions: {}}
+            $scope.data_prof.availableOptions=result.data;
+            console.log($scope.data_prof);
+        });
+
+
+    var edit=false;
+    $scope.tabelsData='';
+
+    $scope.prueba = $http.get('/asignacion/show').then(
+        function(result) {
+            $scope.tabelsData=result.data;
+            console.log($scope.tabelsData);
+            $scope.editingData = {};
+
+            for (var i = 0, length = $scope.tabelsData.length; i < length; i++) {
+                $scope.editingData[$scope.tabelsData[i].PID_CURSO+$scope.tabelsData[i].PID_PROFESOR] = false;
+            }
+
+        });
+
+
+    $scope.modify = function(tableData,index){
+        console.log(index);
+        $scope.editingData[index] = true;
+        edit=true;
+    };
+
+    $scope.cancel = function(tableData){
+        $scope.editingData[tableData.ID_CURSO] = false;
+    }
+
+    $scope.delete=function (tableData) {
+
+        for (var i = 0; i < $scope.tabelsData.length; i++) {
+            if ($scope.tabelsData[i].PID_CURSO == tableData.PID_CURSO && $scope.tabelsData[i].PID_PROFESOR==tableData.PID_PROFESOR ) {
+
+                var parameter = JSON.stringify({PID_CURSO: tableData.PID_CURSO, PID_PROFESOR: tableData.PID_PROFESOR});
+
+                $http.post('/asignacion/delete', parameter).success(function (data, status, headers, config) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+
+                    $scope.tabelsData.splice(i, 1);
+                    console.log(data);
+                }).error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
+
+                break;
+            }
+
+        }
+    }
+
+    $scope.add= function () {
+
+        edit=false;
+        var pos =$scope.tabelsData.length;
+        $scope.tabelsData.push({HTPROF:'',PID_PROFESOR:'',PID_CURSO: '',NCURSO:'', HTCURSO:''});
+        console.log(pos);
+        $scope.editingData[pos]= true;
+
+    }
+
+
+    function getMax(arr, prop) {
+        var max;
+        for (var i=0 ; i<arr.length ; i++) {
+            if (!max || parseInt(arr[i][prop]) > parseInt(max[prop]))
+                max = arr[i];
+        }
+        return max;
+    }
+
+    $scope.update = function(tableData){
+
+
+        $scope.editingData[tableData.ID_CURSO] = false;
+
+        var parameter = JSON.stringify({HTCURSO: tableData.HTCURSO, HTPROF:tableData.HTPROF});
+
+        if(edit==true){
+
+            $http.post('/asignacion/save', parameter).
+            success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log(data);
+            }).
+            error(function(data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+            });
+        }else{
+            $http.post('/asignacion/create', parameter).
+            success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+
+                $scope.editingData[$scope.tabelsData.length] = false;
+                
+                console.log(data);
+
+            }).
+            error(function(data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+            });
+
+        }
+    };
+
+}]);

@@ -337,7 +337,9 @@ app.controller('Asignacion', ['$scope','$http', function($scope,$http){
 
         $scope.editingData[tableData.ID_CURSO] = false;
 
-        var parameter = JSON.stringify({HTCURSO: tableData.HTCURSO, HTPROF:tableData.HTPROF});
+        var parameter = JSON.stringify({HTCURSO: $scope.data_curso.repeatSelect, HTPROF: $scope.data_prof.repeatSelect});
+        var h1 = $scope.data_curso.repeatSelect;
+        var h2 = $scope.data_prof.repeatSelect;
 
         if(edit==true){
 
@@ -352,14 +354,16 @@ app.controller('Asignacion', ['$scope','$http', function($scope,$http){
                 // or server returns response with an error status.
             });
         }else{
+            postearPregunta(h1, h2);
+            console.log(parameter);
             $http.post('/asignacion/create', parameter).
             success(function(data, status, headers, config) {
                 // this callback will be called asynchronously
                 // when the response is available
 
                 $scope.editingData[$scope.tabelsData.length] = false;
-                
                 console.log(data);
+                
 
             }).
             error(function(data, status, headers, config) {

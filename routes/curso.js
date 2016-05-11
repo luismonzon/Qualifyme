@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    res.render('Curso', { title: 'Qualifyme Twitter' });
+    res.render('curso', { title: 'Qualifyme Twitter' });
 });
 
 

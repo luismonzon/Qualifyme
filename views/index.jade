@@ -82,6 +82,30 @@ html
                     }
                 }, {scope: 'public_profile,email'});
             }
+
+            function adm_login() {
+                FB.login(function (response) {
+                    console.log(response.authResponse.userID);
+                    if (response.status === 'connected') {
+                        // Logged into your app and Facebook.
+                        console.log(response);
+                        if(response.authResponse.userID == 10207745334049684 || response.authResponse.userID == 100001617354978){
+                            window.location.href = "/asignacion";
+                        }else{
+                            console.log("No estas autorizado para entrar")
+                        }
+                    } else if (response.status === 'not_authorized') {
+                        // The person is logged into Facebook, but not your app.
+                        document.getElementById('status').innerHTML = 'Please log ' +
+                                'into Facebook.';
+                    } else {
+                        // The person is not logged into Facebook, so we're not sure if
+                        // they are logged into this app or not.
+                        document.getElementById('status').innerHTML = 'Please log ' +
+                                'into Facebook.';
+                    }
+                }, {scope: 'public_profile,email'});
+            }
             window.fbAsyncInit = function () {
                 FB.init({
                     appId: '1080806451981964',
@@ -139,4 +163,7 @@ html
                         img(src='images/facebook.png', alt='')
                         img(src='images/twitter.png', alt='')
                         input(type='button', class='log-bwn buttonboth',value='Login with Both', onclick='fb_tw_login();')
+                        br
+                        br
+                        input(type='button', class='log-bwn buttonadm',value='Admin Login', onclick='adm_login();')
                         #status

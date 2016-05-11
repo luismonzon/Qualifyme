@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    res.render('Asignacion', { title: 'Qualifyme Twitter' });
+    res.render('asignacion', { title: 'Qualifyme Twitter' });
 });
 
 
@@ -35,8 +35,10 @@ router.post('/save',function (req, res) {
 router.post('/create',function (req, res) {
 
     console.log('in create');
+    console.log(req);
 
-//
+//aqui creamos el post
+    /*
     var myQuery= "INSERT INTO ASIGNACION (PID_CURSO,PID_PROFESOR,PID_POST)"+
     "SELECT ID_CURSO, ID_PROFESOR , 'aca pone tu id del post' as PID_POST from CURSO as C, PROFESOR as P where  C.HASHTAG= '"+req.body.HTCURSO+"' and P.HASHTAG= '"+req.body.HTPROF+"'";
     connection.query(myQuery, function(err, results) {
@@ -45,7 +47,7 @@ router.post('/create',function (req, res) {
 
         res.send(results);
 
-    });
+    });*/
 
 });
 

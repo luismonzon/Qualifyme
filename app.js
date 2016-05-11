@@ -273,6 +273,43 @@ function AVG(data, socket){
     });
 }
 
+function AddPost(data){
+    console.log(data.prof+" "+data.curs);
+    var myQuery= "select p.ID_PROFESOR as idp, c.ID_CURSO as idc " +
+        "from PROFESOR p, CURSO c " +
+        "WHERE p.HASHTAG = '"+data.prof+"' AND c.HASHTAG = '"+data.cur+"'";
+    //console.log(myQuery);
+    connection.query(myQuery, function(err, rows, fields) {
+        if (err) throw err;
+        var idprof= rows[0].idp;
+        var idcurs= rows[0].idc;
+        //ahora INSERTAMOS EL NUEVO post
+        console.log("idprof "+idprof+" idcurs "+idcurs);
+        var myQueryPost = "INSERT INTO POST (`MENSAJE`,`FECHA`,`ID_PROFESOR`,`ID_CURSO`,`ID_ORIGINAL`)" +
+            "VALUES('"+data.mensaje+"',NOW(),"+idprof+","+idcurs+",'"+data.id+"');";
+        connection.query(myQueryPost, function(err, rows, fields){
+            if(err) throw err;
+            //obtenemos el ID del post nuevo
+            var queryGet="select ID_POST as id from POST order by FECHA desc limit 1";
+            connection.query(queryGet, function(err, rows, fields) {
+                var idpost = rows[0].id;
+                //por ultimo insertamos a la tabla de asignacion.
+                console.log("id prof: "+idprof+" idcurso: "+idcurs+" idnuevopost: "+idpost);
+                var insert = "INSERT INTO ASIGNACION (PID_PROFESOR,PID_CURSO,PID_POST) " +
+                    "VALUES("+idprof+","+idcurs+","+idpost+");";
+                connection.query(insert, function(err, rows, fields){
+
+                });
+
+
+            });
+
+        });
+
+
+    });
+}
+
 
 //------------------------------- Manejo de sockets -----------------------------------------------------------------------//
 app.io.on('connection', function(socket){
@@ -294,6 +331,12 @@ app.io.on('connection', function(socket){
     socket.on('MoodBar',function (data) {
         AVG(data,socket);
     });
+
+    socket.on('AddPost',function (data) {
+        console.log("ADD POST!!!");
+        AddPost(data);
+    });
+    
 });
 
 

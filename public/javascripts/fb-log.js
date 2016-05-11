@@ -150,3 +150,26 @@ function comment(id,data){
  }
  }
  );*/
+
+
+
+function postearPregunta(curso, profesor){
+    var socket = io.connect();
+    FB.api("/1165440753479632/feed", "POST", {
+        "message": "Que tal es #"+profesor+" para dar el curso de #"+curso+" ?"
+    }, function (response) {
+        if (response && !response.error) {
+            document.getElementById('status').innerHTML =
+                'Post insertado al grupo';
+            //ingresamos a la base de datos
+            console.log("mi id");
+            console.log(response.id);
+            var datos = {mensaje: "Que tal es #"+profesor+" para dar el curso de #"+curso+" ?",
+                        id: response.id,
+                        prof: profesor,
+                        cur: curso}
+            socket.emit('AddPost', datos);
+        }
+    });
+
+}

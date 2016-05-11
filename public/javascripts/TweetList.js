@@ -46,6 +46,9 @@ app.controller('myCtrl', function($scope,$resource, $timeout){
             }
             socket.emit('MoodBar', object );
              socket.on('SMoodBar',function (data) {
+                 if (data>5 || data<-5){
+                     data = 5;
+                 }
                  $scope.Percent=(data+5)*10;
                  $scope.$apply();
              });

@@ -10,7 +10,7 @@ var Twitter = require("node-twitter-api"),
     var twitter = new Twitter({
         consumerKey: "0t4l1BJZWPg5bMDY7epCXLwFy",
         consumerSecret: "cnRB03gXg2Vs77t4qdfiHvQBM6ch7oPOx45Od2UQ1fZNSBjsj4",
-        callback: "http://127.0.0.1:3000/tcallback"
+        callback: "http://qualifymegt.com/tcallback"
     });
     console.log("hola nenecos");
     var _requestSecret;

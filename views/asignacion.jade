@@ -136,7 +136,7 @@ html
         div(ng-app='app', ng-controller='Asignacion' class='container')
             table(class="table table-striped table-hover")
                 thead
-                        th index
+                        th No.
                         th Nombre Curso
                         th Hashtag Curso
                         th Nombre Profesor
@@ -176,7 +176,7 @@ html
 
                         td
                             button(ng-hide='editingData[$index]', ng-click='delete(tableData,$index)', class="btn btn-danger btn-sm") Eliminar
-                            button(ng-show='editingData[$index]', ng-click='update(tableData)',  ng-style="{display:none}", class="btn btn-success btn-sm" ) Guardar
+                            button(ng-show='editingData[$index]', ng-click='update(tableData,$index)',  ng-style="{display:none}", class="btn btn-success btn-sm" ) Guardar
                             //button(ng-show='editingData[tableData.ID_PROFESOR]', ng-click='cancel(tableData)',  ng-style="{display:none}", class="btn btn-danger btn-sm" ) Cancelar
 
             button(ng-click='add()' class="btn btn-default") Agregar Curso

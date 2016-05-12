@@ -75,7 +75,7 @@ router.get('/show',function (req, res) {
 
     var myQuery= "SELECT PID_PROFESOR, P.NOMBRE as NPROF,P.APELLIDO,P.HASHTAG as HTPROF,PID_CURSO, C.NOMBRE as NCURSO, C.HASHTAG as HTCURSO "+
     "FROM Qualifyme_DB.ASIGNACION as A inner Join PROFESOR as P on P.ID_PROFESOR= A.PID_PROFESOR"+
-    " inner join CURSO C on C.ID_CURSO=A.PID_PROFESOR;";
+    " inner join CURSO C on C.ID_CURSO=A.PID_CURSO;";
     connection.query(myQuery, function(err, results) {
         if (err) throw err;
         res.setHeader('Content-Type', 'application/json');

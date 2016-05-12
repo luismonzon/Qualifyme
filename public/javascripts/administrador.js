@@ -272,7 +272,7 @@ app.controller('Asignacion', ['$scope','$http', function($scope,$http){
             $scope.editingData = {};
 
             for (var i = 0, length = $scope.tabelsData.length; i < length; i++) {
-                $scope.editingData[$scope.tabelsData[i].PID_CURSO+$scope.tabelsData[i].PID_PROFESOR] = false;
+                $scope.editingData[i] = false;
             }
 
         });
@@ -332,11 +332,10 @@ app.controller('Asignacion', ['$scope','$http', function($scope,$http){
         return max;
     }
 
-    $scope.update = function(tableData){
+    $scope.update = function(tableData,index){
 
 
-        $scope.editingData[tableData.ID_CURSO] = false;
-
+        $scope.editingData[index] = false;
         var parameter = JSON.stringify({HTCURSO: $scope.data_curso.repeatSelect, HTPROF: $scope.data_prof.repeatSelect});
         var h1 = $scope.data_curso.repeatSelect;
         var h2 = $scope.data_prof.repeatSelect;
@@ -355,22 +354,30 @@ app.controller('Asignacion', ['$scope','$http', function($scope,$http){
             });
         }else{
             postearPregunta(h1, h2);
-            console.log(parameter);
-            $http.post('/asignacion/create', parameter).
-            success(function(data, status, headers, config) {
-                // this callback will be called asynchronously
-                // when the response is available
 
-                $scope.editingData[$scope.tabelsData.length] = false;
-                console.log(data);
-                
 
-            }).
-            error(function(data, status, headers, config) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-            });
+            console.log('length '+$scope.data_curso.availableOptions.length);
 
+            for(var i=0;i<$scope.data_curso.availableOptions.length;i++){
+
+                console.log(h1+','+$scope.data_curso.availableOptions[i].HASHTAG);
+                if($scope.data_curso.availableOptions[i].HASHTAG=h1){
+                    $scope.tabelsData[index].HTCURSO=h1;
+                    $scope.tabelsData[index].NCURSO=$scope.data_curso.availableOptions[i].NOMBRE;
+                    break;
+                }
+            }
+            for(var i=0;i<$scope.data_prof.availableOptions.length;i++){
+                if($scope.data_prof.availableOptions[i].HASHTAG==h2){
+                    $scope.tabelsData[index].HTPROF=h2;
+                    $scope.tabelsData[index].NPROF=$scope.data_prof.availableOptions[i].NOMBRE;
+                    $scope.tabelsData[index].APELLIDO=$scope.data_prof.availableOptions[i].APELLIDO;
+
+                    break;
+                }
+            }
+
+            console.log($scope.tabelsData);
         }
     };
 

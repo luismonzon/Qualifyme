@@ -5,11 +5,13 @@ html
     script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js')
     head
         title Qualifier
-        meta(charset='UTF-8')
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
         script(src="/socket.io/socket.io.js")
         script(src='/javascripts/load_menu.js')
-        link(rel='stylesheet', href='stylesheets/bootstrap.css')
-        script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+        link(rel='stylesheet', href='/css/bootstrap.min.css')
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js')
+        script(src='/js/bootstrap.min.js')
 
     body(ng-app='Menu', ng-controller="myCtrl")
         nav.navbar.navbar-default
@@ -27,8 +29,8 @@ html
                             a(href='#') Link
                         li
                             a(href='#')
-                                 |Link
-                                 span.sr-only (current)
+                                | Link
+                                span.sr-only (current)
                         li.dropdown
                             a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
                                 | Dropdown
@@ -57,10 +59,10 @@ html
 
     h2(align='center') Menu
     .container
-      .list-group
-        a(class='list-group-item', href="{{'/qualify?prof='+x.htp+'&&curs='+x.htc+'&&id='+x.ID}}", ng-repeat="x in records")
-            h4.list-group-item-heading {{'#' + x.htp+' #'+x.htc}}
-            p.list-group-item-text
-                | {{x.pn + ' '+ x.an}}
-            p.list-group-item-text
-                | {{x.cn}}
+        .list-group
+            a(class='list-group-item', href="{{'/qualify?prof='+x.htp+'&&curs='+x.htc+'&&id='+x.ID}}", ng-repeat="x in records")
+                h4.list-group-item-heading {{'#' + x.htp+' #'+x.htc}}
+                p.list-group-item-text
+                    | {{x.pn + ' '+ x.an}}
+                p.list-group-item-text
+                    | {{x.cn}}

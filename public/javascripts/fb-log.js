@@ -54,8 +54,9 @@ function comment(id,data){
                 //addC();
             }else{
                 console.log('NO func '+id);
+                console.log(response.error);
                 if(id.indexOf('c')>-1){
-                    console.log("vuelve a cargar la pagina");
+
                 }else {
                     var correccion = buscar(id);
                     if(correccion!=undefined) {

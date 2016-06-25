@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var sentiment = require('sentiment-spanish');
 
 var routes = require('./routes/index');
+var privacy = require('./routes/privacy');
 var users = require('./routes/users');
 var tweets = require('./routes/tweets');
 var qm_info = require('./routes/qm_info')
@@ -45,6 +46,7 @@ app.use('/tcallback', tcallback);
 app.use('/profesor',profesor);
 app.use('/curso',curso);
 app.use('/asignacion',asignacion);
+app.use('/privacy', privacy);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

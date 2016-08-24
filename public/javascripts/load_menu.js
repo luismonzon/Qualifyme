@@ -12,7 +12,7 @@ app.controller('myCtrl', ['$scope','$http', function($scope, $http){
     $scope.prueba = $http.get('/qm_info/data').then(
         function(result) {
             $scope.records = result.data;
-            console.log($scope.records);
+
         });
 }]);
 
